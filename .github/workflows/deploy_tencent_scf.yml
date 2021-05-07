@@ -26,7 +26,6 @@ jobs:
       - name: "部署到腾讯云函数"
         env:
           STAGE: dev
-          REGION: ap-guangzhou
           SERVERLESS_PLATFORM_VENDOR: tencent
           TENCENT_SCF_ASM_CONFIG: ${{ secrets.TENCENT_SCF_ASM_CONFIG }}
           TENCENT_SCF_CREDENTIALS: ${{ secrets.TENCENT_SCF_CREDENTIALS }}
