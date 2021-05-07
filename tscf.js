@@ -11,7 +11,7 @@ exports.main_handler = (event, context, callback) => {
   let argv = process.argv
   argv[2] = process.env.cmd
   argv[3] = '--config'
-  argv[4] = process.env.asm_code_dir + process.env.config
+  argv[4] = process.env.config
   argv[5] = '--tasks'
   argv[6] = process.env.tasks
   console.log(argv.join(' '))

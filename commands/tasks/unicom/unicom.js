@@ -50,7 +50,10 @@ var start = async (params) => {
     await require('./woTree').doTask(request, options)
   }, taskOption)
 
-
+  // 首页-小说-阅读领1G
+  await scheduler.regTask('dailyBookRead1GFlowTask', async (request) => {
+    await require('./dailyBookRead1GFlowTask').doTask(request, options)
+  }, taskOption)
 
   // 首页-游戏-娱乐中心-每日打卡
   await scheduler.regTask('producGameSignin', async (request) => {
@@ -63,6 +66,11 @@ var start = async (params) => {
     await require('./producGame').doGameFlowTask(request, options)
   }, taskOption)
 
+  // 首页-游戏-娱乐中心-天天领取3G流量包 领取
+  await scheduler.regTask('dailyGetGameflow', async (request) => {
+    await require('./producGame').getEveryDayGameFlow(request, options)
+  }, taskOption)
+  
   // 首页-积分查询-游戏任务
   await scheduler.regTask('dailygameIntegral', async (request) => {
     await require('./producGame').doGameIntegralTask(request, options)
@@ -91,21 +99,9 @@ var start = async (params) => {
     await require('./producGame').gameBox(request, options)
     await require('./producGame').doTodayDailyTask(request, options)
   }, {
-    ...taskOption,
-    startTime: 22 * 3600
+    ...taskOption/* ,
+    startTime: 22 * 3600 */
   })
-
-
-
-  // 首页-积分商城-火热抢购-三只松鼠-看视频得积分
-  await scheduler.regTask('dailyShopVideoIntegral', async (request) => {
-    await require('./dailyShop').dovideoIntegralTask(request, options)
-  }, taskOption)
-
-  // 服务-办理-套餐变更-赚积分
-  await scheduler.regTask('dailyPackageIntegral', async (request) => {
-    await require('./dailyOtherRewardVideo').doPackeageChangeVideoIntegralTask(request, options)
-  }, taskOption)
 
   // 服务-查询-电子发票-赚积分
 //await scheduler.regTask('dailyWisdomActivityIntegral', async (request) => {
@@ -125,16 +121,6 @@ var start = async (params) => {
   }, {
     ...taskOption,
     startTime: 13 * 3600,
-  })
-
-  // 清理领取某些未知方式的积分
-  // 该处理可能会导致某些活动任务机会不足导致错误，所以执行时间要迟
-  await scheduler.regTask('dailyOtherRewardVideo', async (request) => {
-    await require('./dailyOtherRewardVideo').cleanRewardVideo(request, options)
-  }, {
-    ...taskOption,
-    startTime: 21.5 * 3600,
-    ignoreRelay: true
   })
 
   // 每日0点自动兑换流量

@@ -37,6 +37,7 @@ plugins:
 functions:
   task1:
     handler: tscf.main_handler
+    description: 每日签到、东奥积分、定向积分、沃之树、游戏中心签到、定向积分每日抽奖、每日评论经验、APP下载领积分
     runtime: Nodejs12.16
     memorySize: 256
     timeout: 900
@@ -44,15 +45,16 @@ functions:
       variables:
         cmd: unicom
         config: default.json
-        tasks: dailysignin,winterTwo,dxIntegralEveryDay,dailygamebox,dailylotteryintegral,dailywoTree,dailyBookRead,dailyBookMemberDay,dailyRedbagRainVideoIntegral,dailyRedbagRain,dailyBookVideo,dailyBookLuckdraw,dailyLiuLan,dailyScratchCard,dailyNcow,dailyGrabdollPage,jflottery,dailyYYY,dailyVideoScratchcard,dailyLKMH,dailyYYQ,dailyVideo,dailylottery,producGameSignin,dailycomment,dailyBookAnswer,newYearUserSign,dailyFingerSign,dailyIngots,dailyShopVideoIntegral,dailyPackageIntegral,dailyUnicomTask,olympicgame,dailyClubLottery
+        tasks: dailysignin,winterTwo,dxIntegralEveryDay,dailywoTree,producGameSignin,dailylotteryintegral,dailycomment,dailyDownloadApp
     events:
      - timer:
         name: timer
         parameters:
-          cronExpression: '10 9-10 * * *'
+          cronExpression: '0 40 8 * * * *'
           enable: true
   task2:
     handler: tscf.main_handler
+    description: 玩游戏 领流量
     runtime: Nodejs12.16
     memorySize: 256
     timeout: 900
@@ -65,10 +67,11 @@ functions:
      - timer:
         name: timer
         parameters:
-          cronExpression: '*/30 7-23 * * *'
+          cronExpression: '0 0 9-14 * * * *'
           enable: true
   task3:
     handler: tscf.main_handler
+    description: 游戏中心-积分任务
     runtime: Nodejs12.16
     memorySize: 256
     timeout: 900
@@ -81,10 +84,11 @@ functions:
      - timer:
         name: timer
         parameters:
-          cronExpression: '*/30 7-23 * * *'
+          cronExpression: '0 30 11-13 * * * *'
           enable: true
   task4:
     handler: tscf.main_handler
+    description: 游戏中心-流量领取
     runtime: Nodejs12.16
     memorySize: 256
     timeout: 900
@@ -92,74 +96,10 @@ functions:
       variables:
         cmd: unicom
         config: default.json
-        tasks: gameYearBox
+        tasks: dailyGetGameflow,todayDailyTask
     events:
      - timer:
         name: timer
         parameters:
-          cronExpression: '*/30 21-22 * * *'
-          enable: true
-  task5:
-    handler: tscf.main_handler
-    runtime: Nodejs12.16
-    memorySize: 256
-    timeout: 900
-    environment:
-      variables:
-        cmd: unicom
-        config: default.json
-        tasks: todayDailyTask
-    events:
-     - timer:
-        name: timer
-        parameters:
-          cronExpression: '*/30 22 * * *'
-          enable: true
-  task6:
-    handler: tscf.main_handler
-    runtime: Nodejs12.16
-    memorySize: 256
-    timeout: 900
-    environment:
-      variables:
-        cmd: unicom
-        config: default.json
-        tasks: dailyOtherRewardVideo
-    events:
-     - timer:
-        name: timer
-        parameters:
-          cronExpression: '*/30 22 * * *'
-          enable: true
-  task7:
-    handler: tscf.main_handler
-    runtime: Nodejs12.16
-    memorySize: 256
-    timeout: 900
-    environment:
-      variables:
-        cmd: unicom
-        config: default.json
-        tasks: exchangeDFlow
-    events:
-     - timer:
-        name: timer
-        parameters:
-          cronExpression: '1 0 * * *'
-          enable: true
-  task8:
-    handler: tscf.main_handler
-    runtime: Nodejs12.16
-    memorySize: 256
-    timeout: 900
-    environment:
-      variables:
-        cmd: unicom
-        config: default.json
-        tasks: exchangeDFlowCircle
-    events:
-     - timer:
-        name: timer
-        parameters:
-          cronExpression: '*/30 * * * *'
+          cronExpression: '0 30 21 * * * *'
           enable: true

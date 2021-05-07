@@ -204,7 +204,7 @@ let scheduler = {
             will_tasks = queues.filter(task =>
                 task.taskName in tasks &&
                 task.taskState === 0 &&
-                moment(task.willTime).isBefore(moment(), 'seconds') &&
+                //moment(task.willTime).isBefore(moment(), 'seconds') &&
                 (!selectedTasks.length || selectedTasks.length && selectedTasks.indexOf(task.taskName) !== -1)
             )
         }
@@ -246,7 +246,7 @@ let scheduler = {
     },
     execTask: async (command) => {
         console.info('开始执行任务')
-        if (!scheduler.isRunning) {
+        if (scheduler.isTryRun || !scheduler.isRunning) {
             await scheduler.genFileName(command)
             await scheduler.initTasksQueue()
         }

@@ -424,6 +424,7 @@ var dailyDownloadApp = {
     },
     // Rsa更新
     updateRsaKey: async (axios) => {
+        dailyDownloadApp.rsaKey = {};
         let { rsaKey, reqRSA } = dailyDownloadApp.buildReqRSA()
         let adConf = {
             guid: '03021321010411160500055376653281'

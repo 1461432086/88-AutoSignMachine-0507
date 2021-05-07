@@ -146,7 +146,7 @@ var producGame = {
             await new Promise((resolve, reject) => setTimeout(resolve, 45 * 1000))
 
             ++n
-        } while (n <= 6)
+        } while (n <= game.minute || 6)
     },
     gameInfo: async (axios, options) => {
         const { game, jar } = options
@@ -436,19 +436,6 @@ var producGame = {
         }
 
         await queue.onIdle()
-
-        await new Promise((resolve, reject) => setTimeout(resolve, (Math.floor(Math.random() * 10) + 30) * 1000))
-        let { popularList: gameTasks, gameDeviceTypes } = await producGame.timeTaskQuery(axios, options)
-        games = gameTasks.filter(g => g.state === '1')
-        console.info('剩余未领取game', games.length)
-        for (let game of games) {
-            await new Promise((resolve, reject) => setTimeout(resolve, (Math.floor(Math.random() * 10) + 15) * 1000))
-            await producGame.gameFlowGet(axios, {
-                ...options,
-                gameId: game.id,
-                deviceType: gameDeviceTypes.get(game.id) && "Android"
-            })
-        }
     },
     doGameIntegralTask: async (axios, options) => {
         let { games, jar } = await producGame.getTaskList(axios, options)
@@ -557,7 +544,11 @@ var producGame = {
             if (data.msg.indexOf('防刷策略接口校验不通过') !== -1) {
                console.error('获取奖励失败')
             }
-            console.reward('正在领取奖励 *')
+            try {
+                console.reward('flow', data.data.flow + 'm')
+            } catch (error) {
+                console.error('获取奖励失败')
+            }
         } else {
             console.error('获取奖励失败')
         }
@@ -645,6 +636,29 @@ var producGame = {
     },
     doTodayDailyTask: async (axios, options) => {
 
+        /* let { games: v_games } = await producGame.getTaskList(axios, options)
+        let video_task = v_games.find(d => d.task_type === 'video')
+
+        if (video_task.reachState === '0') {
+            let n = parseInt(video_task.task) - parseInt(video_task.progress)
+            console.info('领取视频任务奖励,剩余', n, '次')
+            let { jar } = await producGame.watch3TimesVideoQuery(axios, options)
+            let i = 1
+            while (i <= n) {
+                await producGame.watch3TimesVideo(axios, {
+                    ...options,
+                    jar
+                })
+                await new Promise((resolve, reject) => setTimeout(resolve, (Math.floor(Math.random() * 5) + 2) * 200))
+                await producGame.getTaskList(axios, options)
+                await producGame.queryIntegral(axios, {
+                    ...options,
+                    taskCenterId: video_task.id
+                })
+                ++i
+            }
+        } */
+
         let { games } = await producGame.getTaskList(axios, options)
         let today_task = games.find(d => d.task_type === 'todayTask')
         if (!today_task) {
@@ -658,10 +672,23 @@ var producGame = {
                 ...options,
                 taskCenterId: today_task.id
             })
-            console.reward('flow', '100m *')
+            console.reward('flow', '100m')
             console.info('领取完成今日任务流量+100m')
         } else if (today_task.reachState === '2') {
             console.info('每日日常任务已完成')
+        }
+    },
+    getEveryDayGameFlow: async (axios, options) => {
+        let { popularList: gameTasks, gameDeviceTypes } = await producGame.timeTaskQuery(axios, options)
+        games = gameTasks.filter(g => g.state === '1')
+        console.info('剩余未领取game', games.length)
+        for (let game of games) {
+            await new Promise((resolve, reject) => setTimeout(resolve, (Math.floor(Math.random() * 10) + 15) * 1000))
+            await producGame.gameFlowGet(axios, {
+                ...options,
+                gameId: game.id,
+                deviceType: gameDeviceTypes.get(game.id)
+            })
         }
     }
 }

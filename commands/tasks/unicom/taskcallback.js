@@ -9,7 +9,7 @@ var transParams = (data) => {
     return params;
 };
 
-//data 是准备加密的字符串,key是你的密钥 
+//data 是准备加密的字符串,key是你的密钥
 
 function encryption(data, key) {
     var iv = "";
@@ -38,7 +38,7 @@ var taskcallback = {
     // 查询活动状态
     query: async (axios, options) => {
         let { params } = options
-        const useragent = `okhttp/4.4.0`
+        const useragent = buildUnicomUserAgent(options, 'p')
 
         let { data, config } = await axios.request({
             baseURL: 'https://m.client.10010.com/',
@@ -101,7 +101,7 @@ var taskcallback = {
             // "latitude": 26.611770629882812,
             // "longitude": 106.63581085205078,
             "sdk_version": "3.3.0.3",
-            "user_agent": "ChinaUnicom4.x/\866 CFNetwork/\1220.1 Darwin/\20.3.0",
+            "user_agent": "Mozilla\/5.0 (Linux; Android 9; VKY-AL00 Build\/HUAWEIVKY-AL00; wv) AppleWebKit\/537.36 (KHTML, like Gecko) Version\/4.0 Chrome\/86.0.4240.198 Mobile Safari\/537.36",
             "extra": {
                 // "ad_slot_type": 7,
                 // "oaid": "ebdde3b9-def7-6cc3-fdfe-9bfff7ce4126",
@@ -144,7 +144,7 @@ var taskcallback = {
                 // "landing_type": 3,
                 // "is_sdk": true,
                 // "is_dsp_ad": false,
-                 "imei": "867442035025655",
+                // "imei": "867442035025655",
                 // "req_id": "e9da96b1-2d0c-49d0-b5b0-3fd6540d22d4u2997",
                 "rit": codeId
             },
@@ -180,15 +180,25 @@ var taskcallback = {
             method: 'POST',
             data: message
         })
+        data = res.data
+        // s = a(data.message.substr(1, 16))
+        // console.info(decryption(data.message.replace(/\n/g, '').substr(17), s))
+        if ('code' in data) {
+            throw new Error('获取激励信息出错')
+        }
+
+        return {
+            orderId
+        }
 
     },
     // 提交任务
     doTask: async (axios, options) => {
         let result = await taskcallback.reward(axios, options)
         let params = options.params
-    //    params['orderId'] = result['orderId']
+        params['orderId'] = result['orderId']
         delete params.codeId
-        const useragent = `okhttp/4.4.0`
+        const useragent = buildUnicomUserAgent(options, 'p')
         let { data } = await axios.request({
             baseURL: 'https://m.client.10010.com/',
             headers: {

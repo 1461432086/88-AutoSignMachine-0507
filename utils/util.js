@@ -51,8 +51,7 @@ module.exports = {
             })
         }
         fs.ensureFileSync(cookieFile)
-        fs.writeFileSync(cookieFile, cc.map(c => c.key + '=' + c.value).join('; ')
-        )
+        fs.writeFileSync(cookieFile, cc.map(c => c.key + '=' + c.value).join('; '))
     },
     buildArgs: (argv) => {
         var accounts = []
@@ -67,7 +66,7 @@ module.exports = {
                     arg_group[t] = {}
                 }
                 if (isN) {
-                    arg_group[t][arg_k_split.join('-')] = arg
+                    arg_group[t][arg_k_split.join('-')] = arg.toString()
                 } else {
                     arg_group['0'][arg_k] = arg
                 }

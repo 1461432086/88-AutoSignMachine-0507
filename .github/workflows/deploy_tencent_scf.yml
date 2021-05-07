@@ -1,0 +1,37 @@
+name: 部署到腾讯云函数
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository }}
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: "安装依赖和 serverless 工具"
+        run: |
+          npm install
+          sudo npm install serverless -g
+        
+      - name: "部署到腾讯云函数"
+        env:
+          STAGE: dev
+          REGION: ap-guangzhou
+          SERVERLESS_PLATFORM_VENDOR: tencent
+          TENCENT_SCF_ASM_CONFIG: ${{ secrets.TENCENT_SCF_ASM_CONFIG }}
+          TENCENT_SCF_CREDENTIALS: ${{ secrets.TENCENT_SCF_CREDENTIALS }}
+        run: |
+          echo "$TENCENT_SCF_ASM_CONFIG" > ./default.json
+          echo "$TENCENT_SCF_CREDENTIALS" > ~/credentials
+          sls deploy --debug
+        

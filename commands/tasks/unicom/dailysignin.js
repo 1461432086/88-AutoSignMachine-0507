@@ -4,7 +4,7 @@ const { signRewardVideoParams } = require('./CryptoUtil')
 
 var dailysignin = {
   getIntegral: async (axios, options) => {
-    const useragent = `okhttp/4.4.0`
+    const useragent = buildUnicomUserAgent(options, 'p')
     let { data, config } = await axios.request({
       baseURL: 'https://act.10010.com/',
       headers: {
@@ -30,7 +30,7 @@ var dailysignin = {
     }
   },
   query: async (axios, options) => {
-    const useragent = `okhttp/4.4.0`
+    const useragent = buildUnicomUserAgent(options, 'p')
     let { data } = await axios.request({
       baseURL: 'https://act.10010.com/',
       headers: {
@@ -44,13 +44,14 @@ var dailysignin = {
     return data
   },
   daySign: async (axios, options) => {
-    const useragent = `okhttp/4.4.0`
+    const useragent = buildUnicomUserAgent(options, 'p')
     let { data, config } = await axios.request({
       baseURL: 'https://act.10010.com/',
       headers: {
         "user-agent": useragent,
         "referer": "https://img.client.10010.com",
-        "origin": "https://img.client.10010.com"
+        "origin": "https://img.client.10010.com",
+        "X-Requested-With": appInfo.package_name
       },
       url: `/SigninApp/signin/daySign`,
       method: 'post'
@@ -69,12 +70,12 @@ var dailysignin = {
         if (data.status === '0000') {
           console.reward('integral', data.data.newCoin - integralTotal)
           console.info('积分签到成功+' + (data.data.newCoin - integralTotal) + '积分', '总积分:' + data.data.newCoin)
-          if (data.data.doubleShowFlag) {
+          /* if (data.data.doubleShowFlag) {
             await dailysignin.lookVideoDouble(axios, {
               ...options,
               jar: config.jar
             })
-          }
+          } */
         } else {
           console.error('积分签到失败', data.msg)
         }

@@ -1,6 +1,25 @@
 const util = require('util')
 const axios = require('axios');
 const fs = require('fs-extra');
+const log4js = require("log4js");
+log4js.configure({
+    appenders: {
+        'out': {
+            type: 'stdout',
+            layout: {
+                type: 'pattern',
+                pattern: '%[%d{yyyy-MM-dd hh.mm.ss.SSS} %5.10p --- %x{t} %m%]',
+                tokens: {
+                    t: function (logEvent) {
+                        return process.env['current_task'] || "asm";
+                    }
+                }
+            }
+        }
+    },
+    categories: { default: { appenders: ['out'], level: 'info' } }
+  });
+var logger = log4js.getLogger();
 var transParams = (data) => {
     let params = new URLSearchParams();
     for (let item in data) {
@@ -37,21 +56,25 @@ console.notify = function () {
         }
         notify_logs[process.env.current_task].push(util.format.apply(null, arguments) + '\n')
     }
-    stdout_task_msg(util.format.apply(null, arguments))
+    logger.info(util.format.apply(null, arguments));
+    //stdout_task_msg(util.format.apply(null, arguments))
 }
 
 console.log = function () {
     if (process.env.asm_verbose === 'true') {
-        stdout_task_msg(util.format.apply(null, arguments))
+        //stdout_task_msg(util.format.apply(null, arguments))
+        logger.info(util.format.apply(null, arguments));
     }
 }
 
 console.info = function () {
-    stdout_task_msg(util.format.apply(null, arguments))
+    //stdout_task_msg(util.format.apply(null, arguments))
+    logger.info(util.format.apply(null, arguments));
 }
 
 console.error = function () {
-    stdout_task_msg(wrapper_color('error', util.format.apply(null, arguments)))
+    //stdout_task_msg(wrapper_color('error', util.format.apply(null, arguments)))
+    logger.error(util.format.apply(null, arguments));
 }
 
 console.reward = function () {
@@ -77,7 +100,8 @@ console.reward = function () {
         }
     }
 
-    stdout_task_msg(wrapper_color('reward', util.format.apply(null, [type, num])))
+    //stdout_task_msg(wrapper_color('reward', util.format.apply(null, [type, num])))
+    logger.info(wrapper_color('reward', util.format.apply(null, [type, num])));
 
     let taskJson = fs.readFileSync(process.env.taskfile).toString('utf-8')
     taskJson = JSON.parse(taskJson)
@@ -155,7 +179,7 @@ var notify = {
         if (desp.length) {
             console.log('使用pushplus酱推送消息')
             await axios({
-                url: `http://pushplus.hxtrip.com/send`,
+                url: `http://www.pushplus.plus/send`,
                 method: 'post',
                 data: {
                     token: process.env.notify_pushplus_token,

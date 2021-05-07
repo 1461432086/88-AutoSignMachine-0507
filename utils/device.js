@@ -15,27 +15,27 @@ function generateMixed(n) {
 
 
 var appInfo = {
-    version: 8.0602,
-    unicom_version: 'iphone_c@8.0602',
+    version: 8.0701,
+    unicom_version: 'android@8.0701',
     app_name: '中国联通',
     package_name: 'com.sinovatech.unicom.ui'
 }
 var devices = [{
-    deviceOS: '14.0.1',
-    deviceBrand: 'iphone',
-    deviceModel: 'iPad',
+    android_version: '7.1.2',
+    deviceBrand: 'samsung',
+    deviceModel: 'SM-G977N',
     buildSn: 'LMY48Z',
     deviceId: generateMixed(15) + ''
 }, {
-    deviceOS: '14.0.1',
-    deviceBrand: 'iphone',
-    deviceModel: 'iPad',
+    android_version: '9',
+    deviceBrand: 'huawei',
+    deviceModel: 'VKY-AL00',
     buildSn: 'V417IR',
     deviceId: generateMixed(15) + ''
 }]
 var device = devices[Math.floor(Math.random() * devices.length)]
 var userAgentTpl = {
-    'p': 'Mozilla/5.0 (iPad; CPU OS 14_0_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 unicom{version:iphone_c@8.0600}{systemVersion:dis}{yw_code:}'
+    'p': 'Mozilla/5.0 (Linux; Android {android_version}; {deviceModel} Build/{buildSn}; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/75.0.3770.143 Mobile Safari/537.36; unicom{version:{unicom_version},desmobile:{desmobile}};devicetype{deviceBrand:{deviceBrand},deviceModel:{deviceModel}};{yw_code:}'
 }
 
 let file = path.join(process.env.asm_save_data_dir, `taskFile_${process.env.taskKey}.json`)

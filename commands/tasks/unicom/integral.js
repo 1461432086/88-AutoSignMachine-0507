@@ -211,7 +211,7 @@ var integral = {
   },
 
   todaySign: async (axios, options) => {
-    const useragent = `okhttp/4.4.0`
+    const useragent = buildUnicomUserAgent(options, 'p')
     let { data } = await axios.request({
       baseURL: 'https://act.10010.com/',
       headers: {
