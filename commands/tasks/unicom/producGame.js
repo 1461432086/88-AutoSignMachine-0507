@@ -146,7 +146,7 @@ var producGame = {
             await new Promise((resolve, reject) => setTimeout(resolve, 45 * 1000))
 
             ++n
-        } while (n <= game.minute || 6)
+        } while (n <= (game.minute || 6))
     },
     gameInfo: async (axios, options) => {
         const { game, jar } = options
@@ -225,25 +225,6 @@ var producGame = {
             'deviceType': 'Android',
             'clientVersion': appInfo.version,
         }
-        /* let { data, config } = await axios.request({
-            baseURL: 'https://m.client.10010.com/',
-            headers: {
-                "user-agent": useragent,
-                "referer": "https://img.client.10010.com",
-                "origin": "https://img.client.10010.com"
-            },
-            url: `/producGameApp`,
-            method: 'post',
-            data: transParams(params)
-        })
-        if (data) {
-            return {
-                jar: config.jar,
-                popularList: data.popularList || []
-            }
-        } else {
-            console.error('记录失败')
-        } */
         let defaults = {
             baseURL: 'https://m.client.10010.com/',
             headers: {
@@ -278,9 +259,9 @@ var producGame = {
                 // 合并去重
                 [...androidData.popularList, ...iosData.popularList].forEach(game => games.set(game.id, game));
                 popularList = [...games.values()];
-                // 取出ios任务
-                let iosTasks = iosData.popularList.filter(a => !androidData.popularList.some(i => i.id === a.id));
-                iosTasks.forEach(e => gameDeviceTypes.set(e.id, "iOS"));
+                // 取出ios游戏
+                let iosGames = iosData.popularList.filter(a => !androidData.popularList.some(i => i.id === a.id));
+                iosGames.forEach(e => gameDeviceTypes.set(e.id, "iOS"));
             }
             return {
                 jar: jar,
